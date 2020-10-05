@@ -4,7 +4,7 @@
 import React, { useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { LoginContext } from 'contexts';
-import { Login, Register, Home, MobileMenu, FourOFour, Example } from 'views';
+import { Register, Home, MobileMenu, FourOFour, Example, LoginOld } from 'views';
 import { Layout } from '../layout';
 import { LayoutConfig } from 'configurations';
 import { LoadingScreen } from 'components';
@@ -19,7 +19,7 @@ export const AppRoutes = (props) => {
         pathname: landingPage
       }} {...props} />))} />
 
-      <Route exact path='/login' render={() => ((!loginStatus ? <Login  {...props} /> : <Redirect to={{ pathname: landingPage }} {...props} />))} />
+      <Route exact path='/login' render={() => ((!loginStatus ? <LoginOld  {...props} /> : <Redirect to={{ pathname: landingPage }} {...props} />))} />
       <Route exact path='/register' render={() => ((!loginStatus ? <Register {...props} /> : <Redirect to={{ pathname: landingPage }} {...props} />))} />
 
       <Route exact path='/home' render={() => ((loginStatus === false ? <Redirect to={{ pathname: '/login' }} {...props} /> : <Layout><Home {...props} /></Layout>))} />
