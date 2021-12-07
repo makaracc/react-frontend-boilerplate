@@ -9,6 +9,8 @@ import { Home } from './dependants/Home/Home';
 import { MobileMenu } from './dependants/mobileMenu/mobileMenu';
 import { Example } from './dependants/Example/Example';
 import { UsersManager } from './dependants/UsersManager/UsersManager';
+import { Tutorial } from './dependants/Tutorial/Tutorial';
+import { Good } from './dependants/Good/Good';
 export {
   Example,
   Login,
@@ -18,4 +20,7 @@ export {
   FourOFour,
   AuthCallback,
   UsersManager,
+  Tutorial,
+  //Add new one
+  Good
 };
