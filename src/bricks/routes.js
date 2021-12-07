@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthCallback, Example, FourOFour, Home, Login, MobileMenu, Register, UsersManager } from 'views';
+import { Good, Tutorial } from 'views/index';
 import { Layout } from './layout';
 
 
@@ -65,6 +66,17 @@ export const AppRoutes = (props) => {
       <Route exact path='/menu' element={
         <AuthRoute redirectTo='/login' loginStatus={loginStatus} parentProps={props}>
           <Layout> <MobileMenu  {...props} /></Layout>
+        </AuthRoute>}
+      />
+      {/* Add route Here */}
+      <Route exact path='/tutorial' element={
+        <AuthRoute redirectTo='/login' loginStatus={loginStatus} parentProps={props}>
+          <Layout> <Tutorial  {...props} /></Layout>
+        </AuthRoute>}
+      />
+      <Route exact path='/good' element={
+        <AuthRoute redirectTo='/login' loginStatus={loginStatus} parentProps={props}>
+          <Layout> <Good  {...props} /></Layout>
         </AuthRoute>}
       />
       <Route exact path='/examples' element={

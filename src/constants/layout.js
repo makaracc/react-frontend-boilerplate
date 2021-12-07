@@ -43,11 +43,29 @@ class Layout {
           "isFavourite": true
         }),
         new MenuItem({
+          "name": "Tutorial",
+          "type": "button",
+          "icon": "bytesize:user",
+          "helpingAttribute": "/tutorial",
+          "customTitle": "Tutorial Page",
+          "isFavourite": true
+        }),
+        new MenuItem({
           "name": "Users Manager",
           "type": "button",
           "icon": "bytesize:user",
           "helpingAttribute": "/users",
           "customTitle": "Users Manager",
+          "isFavourite": true
+        }),
+
+        // Add new one
+        new MenuItem({
+          "name": "Good",
+          "type": "button",
+          "icon": "bytesize:user",
+          "helpingAttribute": "/good",
+          "customTitle": "Good",
           "isFavourite": true
         }),
         new MenuItem({
