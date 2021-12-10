@@ -11,6 +11,7 @@ import { Example } from './dependants/Example/Example';
 import { UsersManager } from './dependants/UsersManager/UsersManager';
 import { Tutorial } from './dependants/Tutorial/Tutorial';
 import { Good } from './dependants/Good/Good';
+import { Comprehend } from './dependants/Comprehend/Comprehend';
 export {
   Example,
   Login,
@@ -22,5 +23,6 @@ export {
   UsersManager,
   Tutorial,
   //Add new one
-  Good
+  Good,
+  Comprehend
 };

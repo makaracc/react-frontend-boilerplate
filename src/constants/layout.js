@@ -69,6 +69,14 @@ class Layout {
           "isFavourite": true
         }),
         new MenuItem({
+          "name": "Comprehend",
+          "type": "button",
+          "icon": "bytesize:user",
+          "helpingAttribute": "/comprehend",
+          "customTitle": "Comprehend",
+          "isFavourite": true
+        }),
+        new MenuItem({
           "name": "Logout",
           "type": "logout",
           "icon": "fe:logout",
