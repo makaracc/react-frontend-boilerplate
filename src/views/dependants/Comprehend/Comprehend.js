@@ -1,35 +1,20 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  // Button,
-  // TextField,
-} from "../../../../node_modules/@mui/material/index";
+import { Box } from "../../../../node_modules/@mui/material/index";
 import axios from "../../../../node_modules/axios/index";
 import { Launcher } from "react-chat-window";
 
 export const Comprehend = () => {
-  // const [inputText, SetInputText] = useState("");
-  // const [inputMessage, SetInputMessage] = useState("");
-  // const [sentiment, SetSentiment] = useState();
   const [messageCount, setMessageCount] = useState(0);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
-  // let messageToGetSentiment = "";
 
   // Chat
   const [messageList, setMessageList] = useState([]);
-  const onMessageWasSent = async (message) => {
+  const onMessageWasSent = (message) => {
     if (message === null) return;
-    // messageToGetSentiment = message;
-    // setMessageList([...messageList, message]);
-    new Promise (()=> { setMessageList([...messageList, message]);});
-    try {
-      const text = message.data.text;
-      await getSentiment(text);
-    } catch (e) {
-      console.log(e);
-    }
-    
+    setMessageList([...messageList, message]);
   };
+
+  // Create The left side of the message (Respond from bot)
   const sendMessage = (msg) => {
     const text = msg;
     if (text.length > 0) {
@@ -44,13 +29,14 @@ export const Comprehend = () => {
       ]);
     }
   };
+
+  // handle the click on chat bubble and clear notification.
   const handleChatClick = () => {
     setIsMessageOpen(!isMessageOpen);
     setMessageCount(0);
-    getSentiment("hi");
   };
 
-  //
+  // Get Comprehend
   useEffect(() => {
     axios
       .get("http://localhost:1337/comprehend")
@@ -61,6 +47,20 @@ export const Comprehend = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  // Run everytime messageList got updated
+  // Call for Sentiment API to get the Sentiment for given text (chat from me)
+  useEffect(() => {
+    if (messageList === null) return;
+    try {
+      if (messageList.at(-1).author === "me") {
+        getSentiment(messageList.at(-1).data.text);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },);
+
+  // POST text to API and get the Sentiment back and put in chat
   const getSentiment = async (text) => {
     await fetch("http://localhost:1337/comprehend", {
       method: "post",
@@ -72,21 +72,25 @@ export const Comprehend = () => {
       }),
     })
       .then((res) => {
-        // console.log(res);
         return res.json();
       })
       .then((data) => {
-        // SetSentiment(data.Sentiment);
-        sendMessage(data.Sentiment);
-        // console.log(data);
+        let resText = "";
+        switch(data.Sentiment){
+          // 😀😡😟🤡😑😵‍💫
+          case 'POSITIVE': resText=`${data.Sentiment} 😀`; break;
+          case 'NEGATIVE': resText=`${data.Sentiment} 😟`; break;
+          case 'MIXED': resText=`${data.Sentiment} 😵‍💫`; break;
+          case 'NEUTRAL': resText=`${data.Sentiment} 😑`; break;
+          default: console.log('Cannot Get Here');
+        }
+        sendMessage(`${resText}`);
       })
       .catch((err) => console.log(err));
   };
+
   // const handleChange = (event) => {
   //   SetInputText(event.target.value);
-  // };
-  // const handleMessageChange = (event) => {
-  //   SetInputMessage(event.target.value);
   // };
 
   const view = (
@@ -100,28 +104,6 @@ export const Comprehend = () => {
         maxWidth: "50%",
       }}
     >
-      {/* <TextField
-        onChange={handleChange}
-        fullWidth
-        label="fullWidth"
-        id="Input text"
-      /> */}
-      {/* <br />
-      <br />
-      <Button variant="contained" onClick={getSentiment}>
-        Get Sentiment
-      </Button> */}
-
-      {/* <h1>{sentiment}</h1> */}
-      {/* <h1>{inputMessage}</h1> */}
-      {/* <TextField
-        onChange={handleMessageChange}
-        fullWidth
-        label="their message"
-        id="Input text"
-      />
-      <br /> */}
-
       <Launcher
         agentProfile={{
           teamName: "Sentiment Chat Bot XD",
@@ -135,9 +117,6 @@ export const Comprehend = () => {
         isOpen={isMessageOpen}
         showEmoji
       />
-      {/* <Button variant="contained" onClick={sendMessage}>
-        Send Message
-      </Button> */}
     </Box>
   );
   return view;
