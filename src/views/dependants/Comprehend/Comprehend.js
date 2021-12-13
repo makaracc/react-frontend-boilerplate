@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box } from "../../../../node_modules/@mui/material/index";
-import axios from "../../../../node_modules/axios/index";
 import { Launcher } from "react-chat-window";
+import { API } from "helpers/index";
 
 export const Comprehend = () => {
   const [messageCount, setMessageCount] = useState(0);
@@ -38,19 +38,14 @@ export const Comprehend = () => {
 
   // Get Comprehend
   useEffect(() => {
-    axios
-      .get("http://localhost:1337/comprehend")
-      .then((res) => res.data)
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
+    API.getComprehend();
   }, []);
 
   // Run everytime messageList got updated
   // Call for Sentiment API to get the Sentiment for given text (chat from me)
   useEffect(() => {
     if (messageList === null) return;
+    if (messageList.length === 0) return;
     try {
       if (messageList.at(-1).author === "me") {
         getSentiment(messageList.at(-1).data.text);
@@ -58,40 +53,33 @@ export const Comprehend = () => {
     } catch (e) {
       console.log(e);
     }
-  },);
+  });
 
   // POST text to API and get the Sentiment back and put in chat
   const getSentiment = async (text) => {
-    await fetch("http://localhost:1337/comprehend", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: text,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        let resText = "";
-        switch(data.Sentiment){
-          // 😀😡😟🤡😑😵‍💫
-          case 'POSITIVE': resText=`${data.Sentiment} 😀`; break;
-          case 'NEGATIVE': resText=`${data.Sentiment} 😟`; break;
-          case 'MIXED': resText=`${data.Sentiment} 😵‍💫`; break;
-          case 'NEUTRAL': resText=`${data.Sentiment} 😑`; break;
-          default: console.log('Cannot Get Here');
-        }
-        sendMessage(`${resText}`);
-      })
-      .catch((err) => console.log(err));
+    const sentiment = await API.postComprehendMessage(text);
+    if (sentiment === null) return;
+    let resText = "";
+    switch (sentiment) {
+      // 😀😡😟🤡😑😵‍💫
+      case "POSITIVE":
+        resText = `${sentiment} 😀`;
+        break;
+      case "NEGATIVE":
+        resText = `${sentiment} 😟`;
+        break;
+      case "MIXED":
+        resText = `${sentiment} 😵‍💫`;
+        break;
+      case "NEUTRAL":
+        resText = `${sentiment} 😑`;
+        break;
+      default:
+        resText = `Received! 😬 👍`;
+        console.log("Sentiment not set!");
+    }
+    sendMessage(`${resText}`);
   };
-
-  // const handleChange = (event) => {
-  //   SetInputText(event.target.value);
-  // };
 
   const view = (
     <Box
